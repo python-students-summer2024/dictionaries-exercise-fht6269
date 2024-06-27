@@ -20,9 +20,9 @@ def bake_cookies(filepath):
     
     cookies = []
     with open(filepath, 'r') as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            cookies.append(row)
+            reader = csv.DictReader(file)
+            for row in reader:
+                cookies.append(row)
     return cookies
 
 
