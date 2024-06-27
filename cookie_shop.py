@@ -19,7 +19,7 @@ def bake_cookies(filepath):
 
     
     cookies = []
-    with open(filepath, mode='r') as file:
+    with open(filepath, 'r') as file:
         reader = csv.DictReader(file)
         for row in reader:
             cookies.append(row)
@@ -57,17 +57,16 @@ def display_cookies(cookies):
     :param cookies: a list of all cookies in the shop, where each cookie is represented as a dictionary.
     """
     # write your code for this function below this line
-    if dietary_restrictions:
-        filtered_cookies = [
-            cookie for cookie in cookies]
-        filtered_cookies = cookies
+    
 
     print("Here are the cookies we have in the shop for you:\n")
     
-    for cookie in filtered_cookies:
+    cookies = bake_cookies(filepath="data/cookies.csv")
+
+    for cookie in cookies:
         print(f"  #{cookie['id']} - {cookie['title']}")
         print(f"  {cookie['description']}")
-        print(f"  Price: ${cookie['price']:.2f}\n")
+        print(f"  Price: ${cookie['price']}\n")
 
 def get_cookie_from_dict(id, cookies):
     """
@@ -78,13 +77,9 @@ def get_cookie_from_dict(id, cookies):
     :returns: the matching cookie, as a dictionary
     """
     # write your code for this function below this line
-    id = input("Which cookie do you want?")
-    id = str(id)
     for cookie in cookies:
-        if cookie['id'] == id:
+        if cookie.get("id") == id:
             return cookie
-    return None
-
 
 def solicit_quantity(id, cookie):
     """
@@ -141,20 +136,18 @@ def solicit_order(cookies):
     """
     # write your code for this function below this line
     orders = []
+    cookie_dict = {cookie['id']: cookie for cookie in cookies}
     while True:
         user_input = input("Enter the id of the cookie you want to order (or 'finished', 'done', 'quit', 'exit' to stop): ").strip().lower()
         if user_input in ['finished', 'done', 'quit', 'exit']:
             break
-        try:
-            cookie_id = int(user_input)
-            if cookie_id in cookies:
-                quantity = solicit_quantity(user_input, cookie_id)              
-                orders.append({'id': cookie_id, 'quantity': quantity})
-            else:
-                print("Invalid cookie id. Please enter a valid id.")
-        except ValueError:
-            print("Invalid input. Please enter a valid id.")
 
+        if user_input in cookie_dict:
+                quantity = solicit_quantity(id=user_input, cookie=cookies)
+                orders.append({'id': user_input, 'quantity': quantity})
+        else:
+                print("Invalid input. Please enter a valid id.")
+    
     return orders
 
 def display_order_total(order, cookies):
